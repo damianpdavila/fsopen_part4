@@ -4,9 +4,9 @@
   "description": "Allows users to save information about blogs they know of.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "test": "jest --verbose"
   },
   "author": "Damian Davila",
   "license": "ISC",
@@ -17,6 +17,11 @@
     "mongoose": "^6.5.2"
   },
   "devDependencies": {
+    "jest": "^29.0.0",
     "nodemon": "^2.0.19"
+  },
+  "jest": {
+    "testEnvironment": "node"
   }
+
 }
