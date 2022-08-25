@@ -11,6 +11,25 @@ const totalLikes = (blogs) => {
     })
     return total
 }
+
+const favoriteBlog = (blogs) => {
+    let favIdx = 0;
+    let favLikes = 0;
+
+    blogs.map( (blog, index) => {
+        if (blog.likes > favLikes) {
+            favLikes =  blog.likes
+            favIdx = index
+        }
+    })
+    return {
+        title: blogs[favIdx]['title'],
+        author: blogs[favIdx]['author'],
+        url: blogs[favIdx]['url'],
+        likes: blogs[favIdx]['likes']
+    }
+}
+
 module.exports = {
-    dummy, totalLikes
+    dummy, totalLikes, favoriteBlog
 }
