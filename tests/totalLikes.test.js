@@ -79,3 +79,63 @@ describe("most likes", () => {
     });
 
 });
+
+describe("most blogs", () => {
+
+    const secondAuthorHasMostBlogs = [
+        {
+            "title": "COBOL in Recovery",
+            "author": "Old Fart",
+            "url": "https://cobolrecovery.com",
+            "likes": 5
+        },
+        {
+            "title": "A Blog",
+            "author": "Prolific Author",
+            "url": "https://prolific.com",
+            "likes": 1
+        },
+        {
+            "title": "Love in the Time of Cholera",
+            "author": "Gabriel Garcia Marquez",
+            "url": "https://theclassics.com",
+            "likes": 12
+        },
+        {
+            "title": "B Blog",
+            "author": "Prolific Author",
+            "url": "https://prolific.com",
+            "likes": 2
+        },
+        {
+            "title": "The Title",
+            "author": "Papi Chulo",
+            "url": "https://eljefe.com",
+            "likes": 3
+        },
+        {
+            "title": "C Blog",
+            "author": "Prolific Author",
+            "url": "https://prolific.com",
+            "likes": 3
+        },
+        {
+            "title": "D Blog",
+            "author": "Prolific Author",
+            "url": "https://prolific.com",
+            "likes": 2
+        }
+
+    ]
+
+    test("by author", () => {
+        const result = listHelper.mostBlogs(secondAuthorHasMostBlogs);
+        expect(result).toEqual(
+            {
+                "author": "Prolific Author",
+                "blogs": 4
+            }
+        );
+    });
+
+});
