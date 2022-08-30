@@ -140,12 +140,81 @@ test("a blog with no title and no url cannot be added", async () => {
         likes: 1,
     };
 
+    await api.post("/api/blogs").send(newBlog).expect(400);
+
+    const response = await api.get("/api/blogs");
+    expect(response.body).toHaveLength(initialBlogs.length);
+});
+
+test("a blog can be deleted with a valid ID", async () => {
+    // Add a blog and get the resulting id
+
+    const newBlog = {
+        title: "Blog to be Deleted",
+        author: "Shortlived Author",
+        url: "https://shorttimer.com",
+        likes: 1,
+    };
+
     await api
         .post("/api/blogs")
         .send(newBlog)
-        .expect(400);
+        .expect(201)
+        .expect("Content-Type", /application\/json/);
+
+    const getAll = await api.get("/api/blogs");
+
+    const postTitles = getAll.body.map((r) => r.title);
+
+    expect(getAll.body).toHaveLength(initialBlogs.length + 1);
+    expect(postTitles).toContain("Blog to be Deleted");
+
+    // Delete it
+
+    const id = getAll.body.filter(
+        (blog) => blog.title === "Blog to be Deleted"
+    )[0].id;
+
+    await api.delete(`/api/blogs/${id}`)
+        .expect(204);
+
+    // Double-check it
+
+    await api.get(`/api/blogs/${id}`)
+        .expect(404);
 
 });
+
+test("a blog like count can be updated", async () => {
+    const getAll = await api.get("/api/blogs");
+    const idToUpdate = getAll.body[0].id;
+
+    const likeUpdate = {
+        likes: 99,
+    };
+
+    const response = await api
+        .put(`/api/blogs/${idToUpdate}`)
+        .send(likeUpdate)
+        .expect(200)
+
+});
+
+test("a blog like count cannot be updated with invalid ID", async () => {
+    const idToUpdate = '000000000000000000000000';
+
+    const likeUpdate = {
+        likes: 99,
+    };
+
+    const response = await api
+        .put(`/api/blogs/${idToUpdate}`)
+        .send(likeUpdate)
+        .expect(404)
+
+});
+
+
 
 afterAll(() => {
     mongoose.connection.close();
