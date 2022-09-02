@@ -7,11 +7,13 @@
     "start": "NODE_ENV=production node index.js",
     "dev": "NODE_ENV=development nodemon index.js",
     "test": "NODE_ENV=test jest --verbose --runInBand --forceExit",
-    "testapi": "NODE_ENV=test jest --verbose --runInBand --forceExit blog_api.test.js"
+    "testuserapi": "NODE_ENV=test jest --verbose --runInBand --forceExit user_api.test.js",
+    "testblogapi": "NODE_ENV=test jest --verbose --runInBand --forceExit blog_api.test.js"
   },
   "author": "Damian Davila",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
     "cross-env": "^7.0.3",
     "dotenv": "^16.0.1",
