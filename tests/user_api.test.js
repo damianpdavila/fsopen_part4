@@ -54,7 +54,7 @@ describe("when there are initially some users saved", () => {
 });
 
 describe("adding a new user", () => {
-    test("succeeds with a valid password", async () => {
+    test("succeeds with a status code 201", async () => {
         const newUser = {
             username: "addeduser",
             name: "Added User",
@@ -78,7 +78,6 @@ describe("adding a new user", () => {
         const newUser = {
             username: "nopassword",
             name: "No Password",
-            password: "",
         };
 
         await api.post("/api/users").send(newUser).expect(400);
@@ -86,6 +85,54 @@ describe("adding a new user", () => {
         const usersAfterAdd = await helper.usersInDb();
         expect(usersAfterAdd).toHaveLength(helper.initialUsers.length);
     });
+
+    test("fails with status code 400 if no username", async () => {
+        const newUser = {
+            name: "No Username",
+            password: "111111111",
+        };
+
+        await api.post("/api/users").send(newUser).expect(400);
+
+        const usersAfterAdd = await helper.usersInDb();
+        expect(usersAfterAdd).toHaveLength(helper.initialUsers.length);
+    });
+
+    test("fails with status code 400 if short username", async () => {
+        const newUser = {
+            name: "Short username",
+            username: "AA",
+            password: "111111111",
+        };
+
+        await api.post("/api/users").send(newUser).expect(400);
+
+        const usersAfterAdd = await helper.usersInDb();
+        expect(usersAfterAdd).toHaveLength(helper.initialUsers.length);
+    });
+
+    test("fails with status code 400 if short password", async () => {
+        const newUser = {
+            name: "Short password",
+            username: "goodusername",
+            password: "12",
+        };
+
+        await api.post("/api/users").send(newUser).expect(400);
+
+        const usersAfterAdd = await helper.usersInDb();
+        expect(usersAfterAdd).toHaveLength(helper.initialUsers.length);
+    });
+
+    test("fails with status code 400 if username exists", async () => {
+        const newUser = helper.initialUsers[0]
+
+        await api.post("/api/users").send(newUser).expect(400);
+
+        const usersAfterAdd = await helper.usersInDb();
+        expect(usersAfterAdd).toHaveLength(helper.initialUsers.length);
+    });
+
 });
 
 describe("deleting a user", () => {
