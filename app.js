@@ -5,6 +5,7 @@ const app = express();
 const cors = require("cors");
 const blogsRouter = require("./controllers/blogs");
 const usersRouter = require("./controllers/users");
+const loginRouter = require("./controllers/login");
 const logger = require("./utils/logger");
 const middleware = require("./utils/middleware");
 const mongoose = require("mongoose");
@@ -28,6 +29,7 @@ app.use(middleware.requestLogger);
 logger.info("startng main routes");
 app.use("/api/blogs", blogsRouter);
 app.use("/api/users", usersRouter);
+app.use("/api/login", loginRouter);
 
 logger.info("starting default middleware");
 app.use(middleware.unknownEndpoint);

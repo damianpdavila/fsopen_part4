@@ -2,8 +2,9 @@ POST http://localhost:3003/api/blogs/ HTTP/1.1
 content-type: application/json
 
 {
-    "title": "COBOL in Recovery",
-    "author": "Old Fart",
-    "url": "https://cobolrecovery.com",
-    "likes": 5
+    "title": "Manual With User Joe Blow",
+    "author": "Anne Author",
+    "url": "https://manualwithuser.com",
+    "likes": 0,
+    "user": "631222e939d468119738643d"
 }

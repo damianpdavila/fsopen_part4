@@ -51,6 +51,7 @@ describe("when there are initially some users saved", () => {
         const users = response.body;
         expect(users[0].id).toBeDefined();
     });
+
 });
 
 describe("adding a new user", () => {
@@ -137,12 +138,10 @@ describe("adding a new user", () => {
 
 describe("deleting a user", () => {
     test("succeeds with status code 204 if id is valid", async () => {
-        // Add a user and get the resulting id
         const newUser = {
-            title: "User to be Deleted",
-            author: "Shortlived Author",
-            url: "https://shorttimer.com",
-            likes: 1,
+            username: "tobedeleted",
+            name: "Added to be Deleted User",
+            password: "100000000000",
         };
 
         await api
@@ -151,10 +150,12 @@ describe("deleting a user", () => {
             .expect(201)
             .expect("Content-Type", /application\/json/);
 
+        const usersAfterAdd = await helper.usersInDb();
+        expect(usersAfterAdd).toHaveLength(helper.initialUsers.length + 1);
+
         // Delete it
-        const getAll = await helper.usersInDb();
-        const id = getAll.filter(
-            (user) => user.title === "User to be Deleted"
+        const id = usersAfterAdd.filter(
+            (user) => user.username === "tobedeleted"
         )[0].id;
 
         await api.delete(`/api/users/${id}`).expect(204);
@@ -165,30 +166,33 @@ describe("deleting a user", () => {
 });
 
 describe("updating a user", () => {
-    test("updating like count succeeds with status code 200 if user exists", async () => {
+    test("updating the name succeeds with status code 200 if user exists", async () => {
         const getAll = await api.get("/api/users");
         const idToUpdate = getAll.body[0].id;
 
-        const likeUpdate = {
-            likes: 99,
+        console.log("id to update: ", idToUpdate);
+        console.log("all users: ", JSON.stringify(getAll.body));
+
+        const nameUpdate = {
+            name: "Updated Name",
         };
 
         const response = await api
             .put(`/api/users/${idToUpdate}`)
-            .send(likeUpdate)
+            .send(nameUpdate)
             .expect(200);
     });
 
-    test("updating like count fails with status code 404 if user does not exist", async () => {
+    test("updating the name fails with status code 404 if user does not exist", async () => {
         const idToUpdate = "000000000000000000000000";
 
-        const likeUpdate = {
-            likes: 99,
+        const nameUpdate = {
+            name: "Updated Name",
         };
 
         const response = await api
             .put(`/api/users/${idToUpdate}`)
-            .send(likeUpdate)
+            .send(nameUpdate)
             .expect(404);
     });
 });

@@ -1,0 +1,6 @@
+PUT http://localhost:3003/api/users/631222e939d468119738643d HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Updated Name"
+}
