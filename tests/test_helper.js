@@ -103,7 +103,6 @@ const usersInDb = async () => {
     return users.map((user) => user.toJSON());
 };
 
-
 module.exports = {
     initialBlogs,
     initialUsers,
