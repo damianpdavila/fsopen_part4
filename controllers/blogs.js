@@ -2,7 +2,7 @@ const blogsRouter = require("express").Router();
 const { update } = require("../models/blog");
 const Blog = require("../models/blog");
 const User = require("../models/user");
-const jwt = require('jsonwebtoken')
+const jwt = require("jsonwebtoken");
 
 blogsRouter.get("/", async (request, response) => {
     const blogs = await Blog.find({});
@@ -10,21 +10,23 @@ blogsRouter.get("/", async (request, response) => {
 });
 
 blogsRouter.post("/", async (request, response) => {
+    console.log("request token: ", request.token);
 
-  console.log("request token: ", request.token)
-  
-    const decodedToken = jwt.verify(request.token, process.env.SECRET)  
-    
-    if (!decodedToken.id) {    
-      return response.status(401).json({ error: 'token missing or invalid' })  
-    }  
-    const user = await User.findById(decodedToken.id)
+    const decodedToken = jwt.verify(request.token, process.env.SECRET);
+
+    if (!decodedToken.id) {
+        return response.status(401).json({ error: "token missing or invalid" });
+    }
+    const user = await User.findById(decodedToken.id);
 
     if (!user) {
-      return response.status(401).json({ error: 'token invalid' })  
+        return response.status(401).json({ error: "token invalid" });
     }
 
-    if ( !request.body.hasOwnProperty("title") && !request.body.hasOwnProperty("url") ) {
+    if (
+        !request.body.hasOwnProperty("title") &&
+        !request.body.hasOwnProperty("url")
+    ) {
         response.status(400).end();
     }
     if (!request.body.hasOwnProperty("likes")) {
@@ -35,13 +37,25 @@ blogsRouter.post("/", async (request, response) => {
     blog.user = user.id;
     const savedBlog = await blog.save();
 
-    user.blogs = user.blogs.concat(savedBlog._id)
+    user.blogs = user.blogs.concat(savedBlog._id);
     await user.save();
 
     response.status(201).json(savedBlog);
 });
 
 blogsRouter.delete("/:id", async (request, response) => {
+    const decodedToken = jwt.verify(request.token, process.env.SECRET);
+
+    if (!decodedToken.id) {
+        return response.status(401).json({ error: "token missing or invalid" });
+    }
+
+    const blog = await Blog.findById(request.params.id);
+
+    if (blog.user.toString() != decodedToken.id) {
+      response.status(403).json({ error: "user not authorized" });
+    }
+
     const result = await Blog.findByIdAndRemove(request.params.id);
     response.status(204).end();
 });

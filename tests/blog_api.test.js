@@ -140,7 +140,7 @@ describe("adding a new blog", () => {
         await api
             .post("/api/blogs")
             .send(newBlog)
-            .set("Authorization", "Bearer " + token)            
+            .set("Authorization", "Bearer " + token)
             .expect(201)
             .expect("Content-Type", /application\/json/);
 
@@ -160,7 +160,7 @@ describe("adding a new blog", () => {
         await api
             .post("/api/blogs")
             .send(newBlog)
-            .set("Authorization", "Bearer " + token)            
+            .set("Authorization", "Bearer " + token)
             .expect(400);
 
         const blogsAfterAdd = await helper.blogsInDb();
@@ -170,7 +170,6 @@ describe("adding a new blog", () => {
 
 describe("deleting a blog", () => {
     test("succeeds with status code 204 if id is valid", async () => {
-
         // Add a blog and get the resulting id
 
         const newBlog = {
@@ -197,7 +196,10 @@ describe("deleting a blog", () => {
             (blog) => blog.title === "Blog to be Deleted"
         )[0].id;
 
-        await api.delete(`/api/blogs/${id}`).expect(204);
+        await api
+            .delete(`/api/blogs/${id}`)
+            .set("Authorization", "Bearer " + token)
+            .expect(204);
 
         // Double-check it
         await api.get(`/api/blogs/${id}`).expect(404);
@@ -209,15 +211,80 @@ describe("deleting a blog", () => {
         console.log("theUser: ", JSON.stringify(theUser));
 
         theUser.blogs.pop();
-        console.log("updated blogs: ", JSON.stringify(theUser.blogs))
+        console.log("updated blogs: ", JSON.stringify(theUser.blogs));
 
         await User.findByIdAndUpdate(
             theUser.id,
             { blogs: theUser.blogs },
             { new: true, runValidators: true, context: "query" }
         );
-    
+    });
 
+    test("fails with status code 403 if requester is not creator of blog item", async () => {
+        // Add a blog with one user and get the resulting id
+
+        const newBlog = {
+            title: "Blog to be Deleted",
+            author: "Shortlived Author",
+            url: "https://shorttimer.com",
+            likes: 1,
+        };
+
+        await api
+            .post("/api/blogs")
+            .set("Authorization", "Bearer " + token)
+            .send(newBlog)
+            .expect(201)
+            .expect("Content-Type", /application\/json/);
+
+        // Create another user
+
+        const newUser = {
+            username: "wronguserfordelete",
+            name: "Wrong Added User to Add Blog",
+            password: "777",
+        };
+
+        const addresponse = await api
+            .post("/api/users")
+            .send(newUser)
+            .expect(201)
+            .expect("Content-Type", /application\/json/);
+
+        // api call normally returns the added user, but through supertest it returns the full http request instead ??
+        const addedUser = JSON.parse(addresponse.text);
+        console.log("test user: ", JSON.stringify(addedUser));
+
+        // Login another user to get that token
+
+        const credentials = {
+            username: newUser.username,
+            password: newUser.password,
+        };
+
+        console.log("credentials: ", JSON.stringify(credentials));
+
+        const response = await api
+            .post("/api/login")
+            .send(credentials)
+            .expect(200)
+            .expect("Content-Type", /application\/json/);
+
+        badToken = response.body.token;
+
+        // Delete blog with second user
+        const getAll = await helper.blogsInDb();
+
+        console.log("all blogs after add:", JSON.stringify(getAll));
+
+        const id = getAll.filter(
+            (blog) => blog.title === "Blog to be Deleted"
+        )[0].id;
+
+        await api
+            .delete(`/api/blogs/${id}`)
+            .set("Authorization", "Bearer " + badToken)
+            .expect(403);
     });
 });
 
