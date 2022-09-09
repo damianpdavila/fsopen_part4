@@ -26,6 +26,10 @@ blogsRouter.post("/", async (request, response) => {
     }  
     const user = await User.findById(decodedToken.id)
 
+    if (!user) {
+      return response.status(401).json({ error: 'token invalid' })  
+    }
+
     if ( !request.body.hasOwnProperty("title") && !request.body.hasOwnProperty("url") ) {
         response.status(400).end();
     }
@@ -34,6 +38,7 @@ blogsRouter.post("/", async (request, response) => {
     }
 
     const blog = new Blog(request.body);
+    blog.user = user.id;
     const savedBlog = await blog.save();
 
     user.blogs = user.blogs.concat(savedBlog._id)
