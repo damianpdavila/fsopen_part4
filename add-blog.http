@@ -1,9 +1,9 @@
 POST http://localhost:3003/api/blogs/ HTTP/1.1
 content-type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkhhdmVQYXNzd29yZCIsImlkIjoiNjMxMjM1NmNmNjY4ZjVjNjhjYmI2ODA1IiwiaWF0IjoxNjYyNjUwODk0fQ._EdkMcE0aQ37Tn-S3WnUA8d3XXln4Ta_J4B8IPZcdv8
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlRvRGVsZXRlNFRva2VuVGVzdCIsImlkIjoiNjMxYjVlNWVjMzRlZDJlYTU2OWJjYzY4IiwiaWF0IjoxNjYyNzM4MDYyLCJleHAiOjE2NjI3NDE2NjJ9.xXt488br8F6rFBtc6xy9TnaU6TRxOY1N1h2WP2OWkBg
 
 {
-    "title": "Manual With User Joe Blow",
+    "title": "Manual With User Token Test",
     "author": "Anne Author",
     "url": "https://manualwithuser.com",
     "likes": 0,
