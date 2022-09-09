@@ -1,6 +1,6 @@
 POST http://localhost:3003/api/blogs/ HTTP/1.1
 content-type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlRvRGVsZXRlNFRva2VuVGVzdCIsImlkIjoiNjMxYjY3ZjUyOWVjZTk0NGEyOWE3MDQxIiwiaWF0IjoxNjYyNzQwNDk5LCJleHAiOjE2NjI3NDQwOTl9.DKX5VUPU90B35JSzZMOAdnHzMFfpiq7XconaW9b8KQ0
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlRvRGVsZXRlNFRva2VuVGVzdCIsImlkIjoiNjMxYjY3ZjUyOWVjZTk0NGEyOWE3MDQxIiwiaWF0IjoxNjYyNzQ4NDQ0LCJleHAiOjE2NjI3NTIwNDR9.RwXCNjLzXSCwYSFF1ltJrgJFNNIX-07nqaNlYbRul3Q
 
 {
     "title": "Manual With User Token Test",
