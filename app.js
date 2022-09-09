@@ -25,6 +25,7 @@ app.use(cors());
 app.use(express.static("build"));
 app.use(express.json());
 app.use(middleware.requestLogger);
+app.use(middleware.tokenExtractor);
 
 logger.info("startng main routes");
 app.use("/api/blogs", blogsRouter);
