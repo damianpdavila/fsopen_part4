@@ -6,7 +6,7 @@ const jwt = require("jsonwebtoken");
 const { userExtractor } = require("../utils/middleware");
 
 blogsRouter.get("/", async (request, response) => {
-    const blogs = await Blog.find({});
+    const blogs = await Blog.find({}).populate('user', {username: 1, name: 1});
     response.json(blogs);
 });
 
@@ -51,16 +51,17 @@ blogsRouter.delete("/:id", userExtractor, async (request, response) => {
 
 blogsRouter.put("/:id", async (request, response) => {
     console.log(`Put request: ${JSON.stringify(request.body)}`);
+
     const { likes } = request.body;
 
-    const updatedPerson = await Blog.findByIdAndUpdate(
+    const updatedBlog = await Blog.findByIdAndUpdate(
         request.params.id,
         { likes },
         { new: true, runValidators: true, context: "query" }
     );
-    console.log(`Update result: ${JSON.stringify(updatedPerson)}`);
-    if (updatedPerson) {
-        response.status(200).json(updatedPerson);
+    console.log(`Update result: ${JSON.stringify(updatedBlog)}`);
+    if (updatedBlog) {
+        response.status(200).json(updatedBlog);
     } else {
         response.status(404).end();
     }
