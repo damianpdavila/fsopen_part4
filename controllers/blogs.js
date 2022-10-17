@@ -52,11 +52,12 @@ blogsRouter.delete("/:id", userExtractor, async (request, response) => {
 blogsRouter.put("/:id", async (request, response) => {
     console.log(`Put request: ${JSON.stringify(request.body)}`);
 
-    const { likes } = request.body;
+    //const { likes } = request.body;
+    console.log(`Req params: ${JSON.stringify({...request.body})}`);
 
     const updatedBlog = await Blog.findByIdAndUpdate(
         request.params.id,
-        { likes },
+        { ...request.body },
         { new: true, runValidators: true, context: "query" }
     );
     console.log(`Update result: ${JSON.stringify(updatedBlog)}`);
