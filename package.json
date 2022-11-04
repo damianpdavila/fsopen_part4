@@ -8,7 +8,8 @@
     "dev": "NODE_ENV=development nodemon index.js",
     "test": "NODE_ENV=test jest --verbose --runInBand --forceExit",
     "testuserapi": "NODE_ENV=test jest --verbose --runInBand --forceExit user_api.test.js",
-    "testblogapi": "NODE_ENV=test jest --verbose --runInBand --forceExit blog_api.test.js"
+    "testblogapi": "NODE_ENV=test jest --verbose --runInBand --forceExit blog_api.test.js",
+    "start:test": "NODE_ENV=test node index.js"
   },
   "author": "Damian Davila",
   "license": "ISC",
